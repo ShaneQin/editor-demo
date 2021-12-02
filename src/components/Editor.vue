@@ -3,17 +3,20 @@
     <div>
       <div class="row">
         <div class="cell">
-          <span v-for="(item, index) in contents" :data-index="index" :class="item.comment ? 'underline' : ''">{{
-              item.text
-            }}</span>
+          <template v-for="(item, index) in contents">
+            <span v-if="item.comment" class="highlight" :data-index="index"
+                  @mouseenter="handleMouseEnter(item.comment)">{{ item.text }}</span>
+            <span v-else :data-index="index">{{ item.text }}</span>
+          </template>
         </div>
         <div class="cell">
           <span v-for="item in center" :class="item.removed ? 'rmv' : ''">{{ item.value }}</span>
         </div>
-        <div class="cell" contenteditable="true">{{ right }}</div>
+        <div class="cell" contenteditable="true" v-html="right" id="right"></div>
       </div>
     </div>
     <button @click="handleClick">术语</button>
+    <input type="text" v-model="search">
   </div>
 
 </template>
@@ -26,69 +29,84 @@ export default {
     return {
       contents: [
         {
-          text: '为了看日出，我常常早起'
+          text: '为了看日出，我常常早起，那是天还没有大亮，只听见船里机器的声音'
         }
       ],
       left: '123456',
-      right: '456222',
-      center: ''
+      right: '为了测试一下搜索功能',
+      center: '',
+      search: ''
     }
   },
   mounted() {
     const diff = diffChars(this.left, this.right)
     this.center = diff
   },
+  watch: {
+    search(val) {
+      const selection = document.
+
+    }
+  },
   methods: {
     handleClick() {
-      const { anchorOffset, focusOffset, anchorNode, focusNode } = document.getSelection()
-      let start = Number(anchorNode.parentNode.dataset.index)
-      let end = Number(focusNode.parentNode.dataset.index)
-      if (end < start) [start, end] = [end, start]
-      if (anchorNode === focusNode) {
-        this.appendContent(start, anchorOffset, focusOffset)
-      } else {
+      if (document.getSelection) {
+        const selection = document.getSelection()
+        const { anchorNode, focusNode, anchorOffset, focusOffset } = selection
+        let startNode = anchorNode, endNode = focusNode
+        let startOffset = anchorOffset, endOffset = focusOffset
+        let startParentNode = startNode.parentNode, endParentNode = endNode.parentNode
+        let startIndex = Number(startParentNode.dataset.index), endIndex = Number(endParentNode.dataset.index)
+        if (startNode === endNode && endOffset < startOffset) {
+          [startOffset, endOffset] = [endOffset, startOffset];
+        }
+        if (endIndex < startIndex) {
+          [startIndex, endIndex] = [endIndex, startIndex];
+          [startOffset, endOffset] = [endOffset, startOffset];
+          [startNode, endNode] = [endNode, startNode];
+        }
         let text = ''
-        let totalFocusOffset = focusOffset
-        for (let i = start; i <= end; i++) {
+        let totalFocusOffset = endOffset
+        for (let i = startIndex; i <= endIndex; i++) {
           text += this.contents[i].text
-          console.log(text)
-          if (i === end - 1) {
+          if (i === endIndex - 1) {
             totalFocusOffset += text.length
           }
         }
         const contents = [...this.contents]
-        contents.splice(start, end - start + 1, {
-          text
-        })
+        contents.splice(startIndex, endIndex - startIndex + 1, { text })
         this.contents = contents
-        this.appendContent(start, anchorOffset, totalFocusOffset)
-      }
-      this.$nextTick(() => {
-        const contents = []
-        let text = ''
-        for (let i = 0; i < this.contents.length; i++) {
-          if (this.contents[i].comment && text) {
-            contents.push({
-              text
-            }, this.contents[i])
-            text = ''
-          } else {
-            text += this.contents[i].text
+        this.appendContent(startIndex, startOffset, totalFocusOffset)
+        selection.removeAllRanges()
+        this.$nextTick(() => {
+          const contents = []
+          let text = ''
+          for (let i = 0; i < this.contents.length; i++) {
+            if (this.contents[i].comment) {
+              if (text) {
+                contents.push({ text })
+                text = ''
+              }
+              contents.push(this.contents[i])
+            } else {
+              text += this.contents[i].text
+            }
           }
-        }
-        if (text) {
-          contents.push({
-            text
-          })
-        }
-        this.contents = contents
-      })
+          if (text) {
+            contents.push({ text })
+          }
+          this.contents = contents
+        })
+      } else {
+        console.log('不支持注释功能')
+      }
+
     },
-    appendContent(start, anchorOffset, focusOffset) {
+    appendContent(start, startOffset, endOffset) {
       const currentText = this.contents[start].text
-      const left = currentText.substring(0, anchorOffset)
-      const center = currentText.substring(anchorOffset, focusOffset)
-      const right = currentText.substring(focusOffset)
+      const left = currentText.substring(0, startOffset)
+      const center = currentText.substring(startOffset, endOffset)
+      const right = currentText.substring(endOffset)
       const contents = [...this.contents]
       contents.splice(
         start,
@@ -101,6 +119,9 @@ export default {
     },
     createContentObj(text, comment) {
       return { text, comment }
+    },
+    handleMouseEnter(content) {
+      console.log(content)
     }
   }
 }
@@ -126,8 +147,8 @@ export default {
   color: red;
 }
 
-.underline {
-  text-decoration: underline;
+.highlight {
+  background-color: green;
 }
 
 </style>
