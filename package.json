@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@grammarly/editor-sdk-vue": "^1.2.1",
     "core-js": "^3.6.5",
     "diff": "^5.0.0",
     "vue": "^2.6.11"

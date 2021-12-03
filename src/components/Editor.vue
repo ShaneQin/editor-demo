@@ -12,7 +12,11 @@
         <div class="cell">
           <span v-for="item in center" :class="item.removed ? 'rmv' : ''">{{ item.value }}</span>
         </div>
-        <div class="cell" contenteditable="true" v-html="right" id="right"></div>
+        <Grammarly clientId="5c891c34-55b1-4504-b1a2-5215d35757ba">
+          <GrammarlyEditorPlugin>
+            <div class="cell" contenteditable="true" id="right"></div>
+          </GrammarlyEditorPlugin>
+        </Grammarly>
       </div>
     </div>
     <button @click="handleClick">术语</button>
@@ -23,8 +27,10 @@
 
 <script>
 import { diffChars } from 'diff'
+import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
 
 export default {
+  components: { Grammarly, GrammarlyEditorPlugin },
   data() {
     return {
       contents: [
@@ -44,7 +50,6 @@ export default {
   },
   watch: {
     search(val) {
-      const selection = document.
 
     }
   },
