@@ -12,11 +12,8 @@
         <div class="cell">
           <span v-for="item in center" :class="item.removed ? 'rmv' : ''">{{ item.value }}</span>
         </div>
-        <Grammarly clientId="5c891c34-55b1-4504-b1a2-5215d35757ba">
-          <GrammarlyEditorPlugin>
-            <div class="cell" contenteditable="true" id="right"></div>
-          </GrammarlyEditorPlugin>
-        </Grammarly>
+        <div contenteditable="true" v-html="right" class="cell" @input="handleInput" ref="div"></div>
+<!--        <editable-div v-model="right" class="cell"></editable-div>-->
       </div>
     </div>
     <button @click="handleClick">术语</button>
@@ -28,9 +25,10 @@
 <script>
 import { diffChars } from 'diff'
 import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
+import EditableDiv from './EditableDiv'
 
 export default {
-  components: { Grammarly, GrammarlyEditorPlugin },
+  components: { Grammarly, GrammarlyEditorPlugin, EditableDiv },
   data() {
     return {
       contents: [
@@ -39,7 +37,7 @@ export default {
         }
       ],
       left: '123456',
-      right: '为了测试一下搜索功能',
+      right: '为了测试搜索功能',
       center: '',
       search: ''
     }
@@ -50,10 +48,24 @@ export default {
   },
   watch: {
     search(val) {
-
+      this.handleSearch(val, this.right)
+    },
+    right(val) {
+      this.handleSearch(this.search, val)
     }
   },
   methods: {
+    handleSearch(search, content) {
+      let temp = content
+      temp = temp.replace(/<.*?>/ig, '');
+      const regExp = new RegExp(search, 'g')
+      if (!search || !regExp.test(temp)) {
+        this.right = temp
+        return
+      }
+      const values = temp.split(regExp);
+      this.right = values.join('<span style="background:red;">' + search + '</span>')
+    },
     handleClick() {
       if (document.getSelection) {
         const selection = document.getSelection()
@@ -127,6 +139,9 @@ export default {
     },
     handleMouseEnter(content) {
       console.log(content)
+    },
+    handleInput(e) {
+      this.right = e.target.innerHTML
     }
   }
 }
