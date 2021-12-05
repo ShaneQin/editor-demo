@@ -12,8 +12,7 @@
         <div class="cell">
           <span v-for="item in center" :class="item.removed ? 'rmv' : ''">{{ item.value }}</span>
         </div>
-        <div contenteditable="true" v-html="right" class="cell" @input="handleInput" ref="div"></div>
-<!--        <editable-div v-model="right" class="cell"></editable-div>-->
+        <highlight-editor class="cell" :value="right" :search-value="search"></highlight-editor>
       </div>
     </div>
     <button @click="handleClick">术语</button>
@@ -25,10 +24,10 @@
 <script>
 import { diffChars } from 'diff'
 import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
-import EditableDiv from './EditableDiv'
+import HighlightEditor from './HighlightEditor'
 
 export default {
-  components: { Grammarly, GrammarlyEditorPlugin, EditableDiv },
+  components: { Grammarly, GrammarlyEditorPlugin, HighlightEditor },
   data() {
     return {
       contents: [
@@ -36,36 +35,17 @@ export default {
           text: '为了看日出，我常常早起，那是天还没有大亮，只听见船里机器的声音'
         }
       ],
-      left: '123456',
+      left: '123456搜索能',
       right: '为了测试搜索功能',
       center: '',
-      search: ''
+      search: '',
     }
   },
   mounted() {
     const diff = diffChars(this.left, this.right)
     this.center = diff
   },
-  watch: {
-    search(val) {
-      this.handleSearch(val, this.right)
-    },
-    right(val) {
-      this.handleSearch(this.search, val)
-    }
-  },
   methods: {
-    handleSearch(search, content) {
-      let temp = content
-      temp = temp.replace(/<.*?>/ig, '');
-      const regExp = new RegExp(search, 'g')
-      if (!search || !regExp.test(temp)) {
-        this.right = temp
-        return
-      }
-      const values = temp.split(regExp);
-      this.right = values.join('<span style="background:red;">' + search + '</span>')
-    },
     handleClick() {
       if (document.getSelection) {
         const selection = document.getSelection()
@@ -139,9 +119,6 @@ export default {
     },
     handleMouseEnter(content) {
       console.log(content)
-    },
-    handleInput(e) {
-      this.right = e.target.innerHTML
     }
   }
 }
@@ -169,6 +146,12 @@ export default {
 
 .highlight {
   background-color: green;
+}
+
+.right {
+  position: relative;
+  z-index: -1;
+  left: -202px;
 }
 
 </style>
