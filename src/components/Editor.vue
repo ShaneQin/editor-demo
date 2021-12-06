@@ -10,7 +10,10 @@
           </template>
         </div>
         <div class="cell">
-          <span v-for="item in center" :class="item.removed ? 'rmv' : ''">{{ item.value }}</span>
+          <div>{{ left }}</div>
+          <span v-for="item in center" :class="`${item.removed ? 'rmv' : ''}${item.added ? 'add' : ''}`">{{
+              item.value
+            }}</span>
         </div>
         <highlight-editor class="cell" :value="right" :search-value="search"></highlight-editor>
       </div>
@@ -47,6 +50,7 @@ export default {
   },
   mounted() {
     const diff = diffChars(this.left, this.right)
+    console.log(diff)
     this.center = diff
   },
   methods: {
