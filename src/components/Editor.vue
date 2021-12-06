@@ -17,6 +17,9 @@
     </div>
     <button @click="handleClick">术语</button>
     <input type="text" v-model="search">
+    <input type="text" v-model="replace">
+    <button @click="handleReplace">替换</button>
+    <button @click="handleReplaceAll">全部替换</button>
   </div>
 
 </template>
@@ -36,9 +39,10 @@ export default {
         }
       ],
       left: '123456搜索能',
-      right: '为了测试搜索功能',
+      right: '为了测试搜索功能为了',
       center: '',
       search: '',
+      replace: '',
     }
   },
   mounted() {
@@ -119,6 +123,12 @@ export default {
     },
     handleMouseEnter(content) {
       console.log(content)
+    },
+    handleReplace() {
+      this.right = this.right.replace(this.search, this.replace)
+    },
+    handleReplaceAll() {
+      this.right = this.right.replace(new RegExp(this.search, 'g'), this.replace)
     }
   }
 }

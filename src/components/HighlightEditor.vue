@@ -4,10 +4,10 @@
       class="editor text-editor"
       contenteditable="true"
       v-html="value"
-      @input="textValue = $event.target.innerHTML"
+      @input="handleInput"
     >
     </div>
-    <div class="editor html-editor" v-html="htmlValue"></div>
+    <div contenteditable="true" class="editor html-editor" v-html="htmlValue"></div>
   </div>
 </template>
 
@@ -38,6 +38,17 @@ export default {
       const values = this.textValue.split(regExp);
       return values.join('<span style="background:red;">' + this.searchValue + '</span>')
     }
+  },
+  watch: {
+    value(val) {
+      this.textValue = val
+    }
+  },
+  methods: {
+    handleInput(e) {
+      this.textValue = e.target.innerHTML
+      this.$emit('contentchange', this.textValue)
+    }
   }
 }
 </script>
@@ -53,6 +64,10 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
+  outline: none;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space;
 }
 
 .html-editor {
