@@ -5,9 +5,10 @@
         <div class="cell">
           <template v-for="(item, index) in contents">
             <span v-if="item.comment" class="highlight" :data-index="index"
-                  @mouseenter="handleMouseEnter(item.comment)">{{ item.text }}</span>
+                  @mouseenter="handleMouseEnter($event, item.comment)">{{ item.text }}</span>
             <span v-else :data-index="index">{{ item.text }}</span>
           </template>
+          <div class="tips" ref="tips">{{ currentContent }}</div>
         </div>
         <div class="cell">
           <div>{{ left }}</div>
@@ -31,14 +32,16 @@
 import { diffChars } from 'diff'
 import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
 import HighlightEditor from './HighlightEditor'
+import CommentEditor from './CommentEditor'
 
 export default {
-  components: { Grammarly, GrammarlyEditorPlugin, HighlightEditor },
+  components: { Grammarly, GrammarlyEditorPlugin, HighlightEditor, CommentEditor },
   data() {
     return {
       contents: [
         {
-          text: '为了看日出，我常常早起，那是天还没有大亮，只听见船里机器的声音'
+          text: '为了看日出，我常常早起，那是天还没有大亮，只听见船里机器的声音',
+          comment: ''
         }
       ],
       left: '123456搜索能',
@@ -46,6 +49,7 @@ export default {
       center: '',
       search: '',
       replace: '',
+      currentContent: ''
     }
   },
   mounted() {
@@ -117,7 +121,7 @@ export default {
         start,
         1,
         this.createContentObj(left),
-        this.createContentObj(center, '牛逼'),
+        this.createContentObj(center, '注释'),
         this.createContentObj(right)
       )
       this.contents = contents
@@ -125,8 +129,12 @@ export default {
     createContentObj(text, comment) {
       return { text, comment }
     },
-    handleMouseEnter(content) {
-      console.log(content)
+    handleMouseEnter(e, content) {
+      const { clientX, clientY } = e
+      console.log(this.$refs.tips.style)
+      this.$refs.tips.style.left = clientX + 'px'
+      this.$refs.tips.style.top = clientY + 'px'
+      this.currentContent = content
     },
     handleReplace() {
       this.right = this.right.replace(this.search, this.replace)
@@ -166,6 +174,14 @@ export default {
   position: relative;
   z-index: -1;
   left: -202px;
+}
+
+.tips {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  background: red;
 }
 
 </style>
