@@ -130,11 +130,12 @@ export default {
       return { text, comment }
     },
     handleMouseEnter(e, content) {
-      const { clientX, clientY } = e
-      console.log(this.$refs.tips.style)
-      this.$refs.tips.style.left = clientX + 'px'
-      this.$refs.tips.style.top = clientY + 'px'
-      this.currentContent = content
+      console.log(content)
+      // const { clientX, clientY } = e
+      // console.log(this.$refs.tips.style)
+      // this.$refs.tips.style.left = clientX + 'px'
+      // this.$refs.tips.style.top = clientY + 'px'
+      // this.currentContent = content
     },
     handleReplace() {
       this.right = this.right.replace(this.search, this.replace)
