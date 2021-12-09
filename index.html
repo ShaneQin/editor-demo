@@ -71,7 +71,7 @@
                 result.pop()
               }
               // 如果当前的被前一个包含了，就直接跳过
-              if (i >= prev[1] && j <= prev[2]) continue
+              if (i >= prev[1] && j <= prev[2] && similar <= prev[3]) continue
             }
             result.push([cur, i, j, similar])
             if (similar === 1) break
