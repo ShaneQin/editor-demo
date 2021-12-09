@@ -48,26 +48,34 @@
     return 1 - arr[len1][len2] / Math.max(len1, len2)
   }
 
-  function getPositionAry(str, percent, target) {
+  function getPosition(str, percent, targetAry) {
     const result = []
-    const len = target.length
-    const max = Math.floor(len * (1 + percent))
-    const min = Math.floor(len * percent)
+
     for (let i = 0; i < str.length; i++) {
-      for (let j = i + min; j < i + max; j++) {
-        const left = str.substring(i, j + 1)
-        const similar = levenshtein(left, target)
-        if (similar > percent) {
-          const cur = result[result.length - 1];
-          if (cur) {
-            if (i >= cur[1] && j <= cur[2]) {
-              result.pop()
-            } else if (i === cur[1]) {
-              result.pop()
+      for (let k = 0; k < targetAry.length; k++) {
+        const target = targetAry[k]
+        const len = target.length
+        const max = Math.ceil(len / percent)
+        const min = Math.floor(len * percent)
+        for (let j = i + min; j < i + max + 1; j++) {
+          const cur = str.substring(i, j)
+          // 标点符号
+          if (cur.indexOf('、') > -1) continue
+          const similar = levenshtein(cur, target)
+          if (similar >= percent) {
+            const prev = result[result.length - 1];
+            if (prev) {
+              /* 同起点 */
+              // i >= prev[1] && j <= prev[2]
+              if (prev[1] === i && similar >= prev[3]) {
+                result.pop()
+              }
+              // 如果当前的被前一个包含了，就直接跳过
+              if (i >= prev[1] && j <= prev[2]) continue
             }
+            result.push([cur, i, j, similar])
+            if (similar === 1) break
           }
-          result.push([left, i, j])
-          if (similar === 1) break
         }
       }
     }
@@ -75,7 +83,10 @@
     return result
   }
 
-  getPositionAry(str, 0.4, '先帝称')
+  const hotWordsAry = ['先帝曰']
+
+
+  getPosition(str, 0.5, hotWordsAry)
 </script>
 </body>
 </html>
