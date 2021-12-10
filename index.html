@@ -7,6 +7,7 @@
     .hot {
       text-decoration: underline;
     }
+
     .key {
       background-color: yellow;
     }
@@ -14,6 +15,7 @@
 </head>
 <body>
 <div id="content"></div>
+<script src="worker.js"></script>
 <script>
 
 
@@ -34,6 +36,10 @@
 愿陛下托臣以讨贼兴复之效，不效，则治臣之罪，以告先帝之灵。若无兴德之言，则责攸之、祎、允等之慢，以彰其咎；陛下亦宜自谋，以咨诹善道，察纳雅言，深追先帝遗诏，臣不胜受恩感激。
 
 今当远离，临表涕零，不知所言。`
+
+  const hotWordsAry = ['先帝曰', '费祎', '得', '宫中', '咨之', '不行']
+  const keyWordsAry = ['先帝', '之']
+  const similarPercent = 0.5
 
   function levenshtein(str1, str2) {
     const len1 = str1.length
@@ -107,28 +113,28 @@
     return result
   }
 
-  const hotWordsAry = ['先帝曰', '费祎', '得', '宫中', '咨之']
-  const keyWordsAry = ['先帝', '之']
-
 
   const hotWordsList = getHotWordsPosition(str, 0.5, hotWordsAry)
   const keyWordsList = getKeyWordsPosition(str, keyWordsAry)
 
   function combineList(hotWordsList, keyWordsList) {
     let i = 0, j = 0
-    let len1 = hotWordsList.length
-    let len2 = keyWordsList.length
-    const result = []
+    const len1 = hotWordsList.length
+    const len2 = keyWordsList.length
+    let result = []
     while (i < len1 && j < len2) {
       const cur1 = hotWordsList[i]
       const cur2 = keyWordsList[j]
       if (cur1.e < cur2.s) {
+        /* 如果第一个字符串的结束位置都小于第二个字符串的开始位置 */
         result.push(cur1)
         i++
+        /* 如果第二个字符串的结束位置都小于第一个字符串的开始位置 */
       } else if (cur1.s > cur2.e) {
         result.push(cur2)
         j++
       } else {
+        /* 有交集的情况 */
         if (cur1.s < cur2.s) {
           cur1.s = cur2.s
           result.push({ ...cur1, e: cur2.s - 1 })
@@ -151,12 +157,11 @@
           }
         }
       }
-
     }
     if (i < len1) {
-      result.concat(hotWordsList.slice(i))
+      result = result.concat(hotWordsList.slice(i))
     } else if (j < len2) {
-      result.concat(keyWordsList.slice(j))
+      result = result.concat(keyWordsList.slice(j))
     }
     return result
   }
