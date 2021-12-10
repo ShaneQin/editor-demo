@@ -48,9 +48,8 @@
     return 1 - arr[len1][len2] / Math.max(len1, len2)
   }
 
-  function getPosition(str, percent, targetAry) {
+  function getHotWordsPosition(str, percent, targetAry) {
     const result = []
-
     for (let i = 0; i < str.length; i++) {
       for (let k = 0; k < targetAry.length; k++) {
         const target = targetAry[k]
@@ -65,13 +64,14 @@
           if (similar >= percent) {
             const prev = result[result.length - 1];
             if (prev) {
-              /* 同起点 */
-              // i >= prev[1] && j <= prev[2]
-              if (prev[1] === i && similar >= prev[3]) {
-                result.pop()
+              /* 有交集分两种情况，这一次比前一次的相似度高，则弹出前一次的，否则不加入数组 */
+              if ((i >= prev[1] && i <= prev[2]) || (j >= prev[2] && j <= prev[2])) {
+                if (similar >= prev[3]) {
+                  result.pop()
+                } else {
+                  continue
+                }
               }
-              // 如果当前的被前一个包含了，就直接跳过
-              if (i >= prev[1] && j <= prev[2] && similar <= prev[3]) continue
             }
             result.push([cur, i, j, similar])
             if (similar === 1) break
@@ -83,10 +83,29 @@
     return result
   }
 
-  const hotWordsAry = ['先帝曰']
+  function getKeyWordsPosition(str, targetAry) {
+    const result = []
+    for (let i = 0; i < targetAry.length; i++) {
+      const cur = targetAry[i]
+      const regExp = new RegExp(cur, 'g')
+      let info = ''
+      while ((info = regExp.exec(str)) != null) {
+        result.push([cur, info.index, info.index + info.length])
+      }
+    }
+    result.sort((a,b) => {
+      return a[1] - b[1]
+    })
+    console.log(result)
+    return result
+  }
+
+  const hotWordsAry = ['先帝曰', '费祎', '得', '宫中', '咨之']
+  const keyWordsAry = ['先帝', '之']
 
 
-  getPosition(str, 0.5, hotWordsAry)
+  getHotWordsPosition(str, 0.5, hotWordsAry)
+  getKeyWordsPosition(str, keyWordsAry)
 </script>
 </body>
 </html>
