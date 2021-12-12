@@ -159,7 +159,7 @@ export default {
 
 .cell {
   width: 200px;
-  height: 100px;
+  height: 500px;
   border: 1px solid #ddd;
 }
 
