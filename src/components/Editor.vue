@@ -1,7 +1,11 @@
 <template>
+
   <div class="editor">
     <div>
       <div class="row">
+        <div class="cell">
+          <comment-editor></comment-editor>
+        </div>
         <div class="cell">
           <template v-for="(item, index) in contents">
             <span v-if="item.comment" class="highlight" :data-index="index"

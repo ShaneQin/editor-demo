@@ -27,15 +27,15 @@ onmessage = function (e) {
     }
   ]
   const monkeyDb = indexedDB.open('monkey')
-  monkeyDb.onupgradeneeded = function (e) {
+  monkeyDb.addEventListener('upgradeneeded', e => {
     const db = e.target.result
     let keywordsStore;
     if (!db.objectStoreNames.contains('keywords')) {
       keywordsStore = db.createObjectStore('keywords', { keyPath: 'id' })
     }
     keywordsStore.createIndex('name', 'name', { unique: true })
-  }
-  monkeyDb.onsuccess = e => {
+  })
+  monkeyDb.addEventListener('success', e => {
     const db = e.target.result
     const transaction = db.transaction('keywords', 'readwrite')
     const store = transaction.objectStore('keywords')
@@ -43,6 +43,5 @@ onmessage = function (e) {
       const cur = keywords[i]
       store.add(cur)
     }
-  }
-
+  })
 }
