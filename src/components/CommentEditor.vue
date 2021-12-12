@@ -52,7 +52,7 @@ export default {
       while (i <= j) {
         const mid = Math.floor((i + j) / 2)
         const cur = list[mid]
-        if (cur.s < comment.s) {
+        if (cur.s <= comment.s) {
           i = mid + 1
         } else if (cur.s > comment.s) {
           j = mid - 1
