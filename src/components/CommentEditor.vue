@@ -27,7 +27,7 @@ export default {
         if (cur.s > pointer) {
           result += this.text.substring(pointer, cur.s)
         }
-        result += `<span class="highlight">${ this.text.substring(cur.s, cur.e + 1) }</span>`
+        result += `<span class="highlight">${this.text.substring(cur.s, cur.e + 1)}</span>`
         pointer = cur.e + 1
       }
       result += this.text.substring(pointer)
@@ -37,11 +37,16 @@ export default {
   methods: {
     handleMouseSelect() {
       const { anchorNode, focusNode, anchorOffset, focusOffset } = document.getSelection()
-      this.selection = {
-        anchorNode, focusNode, anchorOffset, focusOffset
+      if (anchorOffset === focusOffset) {
+        this.selection = null
+      } else {
+        this.selection = {
+          anchorNode, focusNode, anchorOffset, focusOffset
+        }
       }
     },
     handleClick() {
+      if (!this.selection) return
       const { anchorNode, focusNode, anchorOffset, focusOffset } = this.selection
       let startNode = anchorNode, endNode = focusNode
       let startOffset = anchorOffset, endOffset = focusOffset
@@ -54,6 +59,7 @@ export default {
       const comments = this.insertComment({ s, e: e - 1 }, this.comments)
       console.log(comments)
       this.comments = comments
+      this.selection = null
     },
     insertComment(comment, commentsList) {
       // 二分法求当前插入位置

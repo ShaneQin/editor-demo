@@ -28,6 +28,7 @@
     <button @click="handleReplace">替换</button>
     <button @click="handleReplaceAll">全部替换</button>
     <spell-check></spell-check>
+    <indexdb-worker></indexdb-worker>
   </div>
 
 </template>
@@ -37,9 +38,10 @@ import { diffChars } from 'diff'
 import HighlightEditor from './HighlightEditor'
 import CommentEditor from './CommentEditor'
 import SpellCheck from './SpellCheck'
+import IndexdbWorker from './IndexdbWorker'
 
 export default {
-  components: { SpellCheck, HighlightEditor, CommentEditor },
+  components: { SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker },
   data() {
     return {
       contents: [
@@ -158,7 +160,7 @@ export default {
 
 .cell {
   width: 200px;
-  height: 500px;
+  height: 300px;
   border: 1px solid #ddd;
 }
 
