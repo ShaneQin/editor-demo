@@ -1,5 +1,4 @@
 <template>
-
   <div class="editor">
     <div>
       <div class="row">
@@ -35,13 +34,12 @@
 
 <script>
 import { diffChars } from 'diff'
-import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
 import HighlightEditor from './HighlightEditor'
 import CommentEditor from './CommentEditor'
 import SpellCheck from './SpellCheck'
 
 export default {
-  components: { SpellCheck, Grammarly, GrammarlyEditorPlugin, HighlightEditor, CommentEditor },
+  components: { SpellCheck, HighlightEditor, CommentEditor },
   data() {
     return {
       contents: [
