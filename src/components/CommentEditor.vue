@@ -42,9 +42,7 @@ export default {
       }
     },
     handleClick() {
-      console.log(this.selection)
-      const selection = this.selection
-      const { anchorNode, focusNode, anchorOffset, focusOffset } = selection
+      const { anchorNode, focusNode, anchorOffset, focusOffset } = this.selection
       let startNode = anchorNode, endNode = focusNode
       let startOffset = anchorOffset, endOffset = focusOffset
       const startPrevLength = this.getPrevLength(startNode)

@@ -28,6 +28,7 @@
     <input type="text" v-model="replace">
     <button @click="handleReplace">替换</button>
     <button @click="handleReplaceAll">全部替换</button>
+    <spell-check></spell-check>
   </div>
 
 </template>
@@ -37,9 +38,10 @@ import { diffChars } from 'diff'
 import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-vue'
 import HighlightEditor from './HighlightEditor'
 import CommentEditor from './CommentEditor'
+import SpellCheck from './SpellCheck'
 
 export default {
-  components: { Grammarly, GrammarlyEditorPlugin, HighlightEditor, CommentEditor },
+  components: { SpellCheck, Grammarly, GrammarlyEditorPlugin, HighlightEditor, CommentEditor },
   data() {
     return {
       contents: [
@@ -58,7 +60,6 @@ export default {
   },
   mounted() {
     const diff = diffChars(this.left, this.right)
-    console.log(diff)
     this.center = diff
   },
   methods: {
