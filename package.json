@@ -11,7 +11,7 @@
     "dexie": "^3.2.0",
     "diff": "^5.0.0",
     "typo-js": "^1.2.1",
-    "v-contextmenu": "^2.9.0",
+    "v-selectmenu": "^2.0.2",
     "vue": "^2.6.11"
   },
   "devDependencies": {

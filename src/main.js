@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-import contentmenu from 'v-contextmenu'
-import 'v-contextmenu/dist/index.css'
+import vSelectMenu from 'v-selectmenu'
 
-Vue.use(contentmenu)
+Vue.use(vSelectMenu)
 
 Vue.config.productionTip = false
 

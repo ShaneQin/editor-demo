@@ -1,10 +1,14 @@
 <template>
-  <div v-contextmenu:contextmenu>
-    <div v-html="html" class="html" @mouseup="handleMouseSelect"></div>
+  <div>
+    <v-selectmenu
+      :data="list"
+      type="regular"
+      :title="false"
+      :right-click="true"
+    >
+      <div v-html="html" class="html"></div>
+    </v-selectmenu>
     <button @click="handleClick">注释</button>
-    <v-contextmenu ref="contextmenu">
-      <v-contextmenu-item @click="handleClick">添加注释</v-contextmenu-item>
-    </v-contextmenu>
   </div>
 </template>
 
@@ -15,7 +19,9 @@ export default {
     return {
       text: '为了看日出，我常常早起，那时天还没有大亮，只听见船里机器的声音。天空还是一片浅蓝，很浅很浅的。转眼间,天水相接的地方出现了一道红霞。',
       comments: [],
-      selection: null
+      list: [
+        { content: '注释', callback: this.handleClick }
+      ]
     }
   },
   computed: {
@@ -35,19 +41,8 @@ export default {
     }
   },
   methods: {
-    handleMouseSelect() {
-      const { anchorNode, focusNode, anchorOffset, focusOffset } = document.getSelection()
-      if (anchorOffset === focusOffset) {
-        this.selection = null
-      } else {
-        this.selection = {
-          anchorNode, focusNode, anchorOffset, focusOffset
-        }
-      }
-    },
     handleClick() {
-      if (!this.selection) return
-      const { anchorNode, focusNode, anchorOffset, focusOffset } = this.selection
+      const { anchorNode, focusNode, anchorOffset, focusOffset } = document.getSelection()
       let startNode = anchorNode, endNode = focusNode
       let startOffset = anchorOffset, endOffset = focusOffset
       const startPrevLength = this.getPrevLength(startNode)
@@ -59,7 +54,6 @@ export default {
       const comments = this.insertComment({ s, e: e - 1 }, this.comments)
       console.log(comments)
       this.comments = comments
-      this.selection = null
     },
     insertComment(comment, commentsList) {
       // 二分法求当前插入位置
