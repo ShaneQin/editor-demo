@@ -41,6 +41,7 @@ export default {
   },
   watch: {
     value(val) {
+      console.log(val)
       this.textValue = val
     }
   },

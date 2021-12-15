@@ -19,7 +19,7 @@
               item.value
             }}</span>
         </div>
-        <highlight-editor class="cell" :value="right" :search-value="search"></highlight-editor>
+        <replace-editor class="cell"></replace-editor>
       </div>
     </div>
     <button @click="handleClick">术语</button>
@@ -39,9 +39,10 @@ import HighlightEditor from './HighlightEditor'
 import CommentEditor from './CommentEditor'
 import SpellCheck from './SpellCheck'
 import IndexdbWorker from './IndexdbWorker'
+import ReplaceEditor  from './ReplaceEditor'
 
 export default {
-  components: { SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker },
+  components: { SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker, ReplaceEditor },
   data() {
     return {
       contents: [
