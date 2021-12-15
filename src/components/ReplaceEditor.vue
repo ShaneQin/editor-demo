@@ -14,6 +14,7 @@
     <button @click="handleSearch">查找</button>
     <input type="text" v-model="replace">
     <button @click="handleReplace">替换</button>
+    <button @click="handleReplaceAll">替换全部</button>
   </div>
 </template>
 
@@ -34,27 +35,24 @@ export default {
   watch: {
     content() {
       if (this.highlightList.length) {
-        this.handleSearch()
+        this.$nextTick(() => {
+          this.handleSearch()
+        })
       }
     }
   },
   methods: {
-    handleContentChange(e) {
-      this.content = e.target.innerText
-    },
     handleSearch() {
       const len = this.search.length
       const regExp = new RegExp(this.search, 'g')
       const textNode = this.$refs.content.$el.firstChild
       let result = null
       const highlightList = []
-
       const standardRange = document.createRange()
       standardRange.setStart(textNode, 0)
       standardRange.setEnd(textNode, 0)
       const standardRangeReact = standardRange.getBoundingClientRect()
       const lineHeight = standardRangeReact.height
-
       while (result = regExp.exec(this.content)) {
         const range = document.createRange()
         range.setStart(textNode, result.index)
@@ -71,7 +69,7 @@ export default {
             subRange.setEnd(textNode, result.index + j)
             const subRangeReact = subRange.getBoundingClientRect()
             if (subRangeReact.height === lineHeight) {
-              highlightList.pop()
+              if (j !== 1) highlightList.pop()
               j++
             } else {
               i = j - 1
@@ -83,7 +81,10 @@ export default {
       this.highlightList = highlightList
     },
     handleReplace() {
-
+      this.content = this.content.replace(this.search, this.replace)
+    },
+    handleReplaceAll() {
+      this.content = this.content.replace(new RegExp(this.search, 'g'), this.replace)
     }
   }
 }

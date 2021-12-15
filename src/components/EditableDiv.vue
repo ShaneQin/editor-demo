@@ -26,6 +26,7 @@ export default {
   watch: {
     value() {
       if (this.isChange) {
+        console.log(this.value)
         this.innerText = this.value
       }
     }
