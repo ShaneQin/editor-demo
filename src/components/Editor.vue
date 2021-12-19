@@ -29,6 +29,7 @@
     <button @click="handleReplaceAll">全部替换</button>
     <spell-check></spell-check>
     <indexdb-worker></indexdb-worker>
+    <resizable-div></resizable-div>
   </div>
 
 </template>
@@ -40,9 +41,10 @@ import CommentEditor from './CommentEditor'
 import SpellCheck from './SpellCheck'
 import IndexdbWorker from './IndexdbWorker'
 import ReplaceEditor  from './ReplaceEditor'
+import ResizableDiv from './ResizableDiv'
 
 export default {
-  components: { SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker, ReplaceEditor },
+  components: { ResizableDiv, SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker, ReplaceEditor },
   data() {
     return {
       contents: [
