@@ -20,6 +20,7 @@
             }}</span>
         </div>
         <replace-editor class="cell"></replace-editor>
+        <Shortcut class="cell"></Shortcut>
       </div>
     </div>
     <button @click="handleClick">术语</button>
@@ -29,6 +30,7 @@
     <button @click="handleReplaceAll">全部替换</button>
     <spell-check></spell-check>
     <indexdb-worker></indexdb-worker>
+    <resizable-div></resizable-div>
   </div>
 
 </template>
@@ -39,10 +41,12 @@ import HighlightEditor from './HighlightEditor'
 import CommentEditor from './CommentEditor'
 import SpellCheck from './SpellCheck'
 import IndexdbWorker from './IndexdbWorker'
-import ReplaceEditor  from './ReplaceEditor'
+import ReplaceEditor from './ReplaceEditor'
+import ResizableDiv from './ResizableDiv'
+import Shortcut from './Shortcut'
 
 export default {
-  components: { SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker, ReplaceEditor },
+  components: { ResizableDiv, SpellCheck, HighlightEditor, CommentEditor, IndexdbWorker, ReplaceEditor, Shortcut },
   data() {
     return {
       contents: [
